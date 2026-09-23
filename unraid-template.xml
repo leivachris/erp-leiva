@@ -5,13 +5,13 @@
   <Repository>erpleiva:latest</Repository>
   <Network>bridge</Network>
   <Privileged>False</Privileged>
-  <Support>https://github.com/leiva/erp-leiva</Support>
-  <Project>https://github.com/leiva/erp-leiva</Project>
+  <Support>https://github.com/leivachris/erp-leiva</Support>
+  <Project>https://github.com/leivachris/erp-leiva</Project>
   <Overview>ERP multi-tenant para almacenes de construcción. Inventario, ventas, compras, facturación, multi-almacén, tránsitos.</Overview>
   <Category>Business:Office</Category>
   <WebUI>http://[IP]:[PORT:8000]</WebUI>
   <TemplateURL/>
-  <Icon>https://raw.githubusercontent.com/leiva/erp-leiva/main/icon.png</Icon>
+  <Icon>https://raw.githubusercontent.com/leivachris/erp-leiva/main/assets/icon-512.png</Icon>
   <ExtraParams/>
   <PostArgs/>
   <CPUset/>
