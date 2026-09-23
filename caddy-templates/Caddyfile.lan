@@ -1,0 +1,33 @@
+# ============================================================
+# Caddyfile para ERP LEIVA (HTTPS automatico via Let's Encrypt)
+# ============================================================
+# Este fichero se monta en /mnt/user/appdata/erpleiva/caddy/Caddyfile
+# al arrancar el contenedor caddy.
+#
+# Reemplaza tudominio.com por tu dominio real (ej: erp.tuempresa.com)
+# El dominio debe apuntar (A o CNAME) a la IP publica de tu Unraid.
+# Si usas Cloudflare Tunnel, este Caddy se usa internamente en LAN y
+# el tunnel expone el puerto 443 al exterior.
+# ============================================================
+
+# HTTPS automatico para el ERP
+{$PUBLIC_DOMAIN:erp.tudominio.com} {
+    encode gzip
+    reverse_proxy erp:8000
+}
+
+# Sirve la landing page estatica
+www.{$PUBLIC_DOMAIN:erp.tudominio.com} {
+    encode gzip
+    root * /srv/landing
+    try_files {path} {path}.html /index.html
+    file_server
+}
+
+# Landing principal (mismo dominio, sin www)
+landing.{$PUBLIC_DOMAIN:erp.tudominio.com} {
+    encode gzip
+    root * /srv/landing
+    try_files {path} {path}.html /index.html
+    file_server
+}

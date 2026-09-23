@@ -1,0 +1,20 @@
+{
+  "empresa": {
+    "nombre": "Almacén LEIVA",
+    "nombre_comercial": "LEIVA",
+    "slug": "leiva",
+    "cif": "B12345678",
+    "direccion": "Polígono Industrial, Nave 12",
+    "cp": "41010",
+    "poblacion": "Sevilla",
+    "telefono": "954000000",
+    "email": "admin@leiva.es"
+  },
+  "admin": {
+    "username": "leiva",
+    "nombre": "Leiva",
+    "email": "admin@leiva.es",
+    "password": "leiva"
+  },
+  "plan_codigo": "pro"
+}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ERP LEIVA</title>
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>📦</text></svg>">
+</head>
+<body>
+
+<!-- Mensaje de fallback si JS no carga -->
+<noscript>
+  <div style="position:fixed;inset:0;background:#fff;color:#000;padding:40px;font-family:sans-serif;z-index:99999">
+    <h1 style="color:#b91c1c">JavaScript desactivado</h1>
+    <p>Este ERP necesita JavaScript habilitado. Actívalo en la configuración del navegador.</p>
+  </div>
+</noscript>
+
+<div id="boot-error" style="position:fixed;top:0;left:0;right:0;background:#fee2e2;color:#7f1d1d;padding:12px 20px;font-family:monospace;font-size:13px;border-bottom:2px solid #b91c1c;z-index:99999;display:none">
+  <strong>⚠️ Error cargando ERP:</strong> <span id="boot-error-msg"></span>
+</div>
+
+<script>
+window.addEventListener('error', (e) => {
+  const el = document.getElementById('boot-error');
+  if (el) {
+    document.getElementById('boot-error-msg').textContent = e.message + ' (' + e.filename + ':' + e.lineno + ')';
+    el.style.display = 'block';
+  }
+});
+
+// Forzar cierre del modal al cargar la pagina (por si CSS display:flex lo abrio)
+document.addEventListener('DOMContentLoaded', () => {
+  const m = document.getElementById('modal');
+  if (m) m.hidden = true;
+});
+</script>
+
+<!-- ============ PANTALLA DE INSTALACION ============ -->
+<div id="screen-setup" class="screen" hidden>
+  <div class="setup-box">
+    <h1>ERP LEIVA — Instalación inicial</h1>
+    <p class="muted">Configura tu empresa, el plan y el usuario administrador.</p>
+    <form id="form-setup">
+      <fieldset>
+        <legend>Datos de la empresa</legend>
+        <label>Nombre comercial *<input name="nombre" required></label>
+        <label>Nombre fiscal<input name="nombre_comercial"></label>
+        <label>CIF/NIF<input name="cif"></label>
+        <label>Dirección<input name="direccion"></label>
+        <div class="row-2">
+          <label>CP<input name="cp"></label>
+          <label>Población<input name="poblacion"></label>
+        </div>
+        <div class="row-2">
+          <label>Teléfono<input name="telefono"></label>
+          <label>Email<input name="email" type="email"></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Plan</legend>
+        <div id="planes-list" class="planes-grid"></div>
+        <input type="hidden" name="plan_codigo" value="basico">
+      </fieldset>
+
+      <fieldset>
+        <legend>Usuario administrador</legend>
+        <div class="row-2">
+          <label>Username *<input name="admin_username" required></label>
+          <label>Nombre<input name="admin_nombre"></label>
+        </div>
+        <label>Email<input name="admin_email" type="email"></label>
+        <label>Contraseña *<input name="admin_password" type="password" required minlength="6"></label>
+      </fieldset>
+
+      <div id="setup-error" class="error" hidden></div>
+      <button type="submit" class="btn-primary">Instalar ERP</button>
+    </form>
+  </div>
+</div>
+
+<!-- ============ PANTALLA DE LOGIN ============ -->
+<div id="screen-login" class="screen" hidden>
+  <div class="login-box">
+    <h1>ERP LEIVA</h1>
+    <p id="empresa-nombre-login" class="empresa-nombre"></p>
+    <form id="form-login">
+      <label>Usuario<input name="username" required autofocus></label>
+      <label>Contraseña<input name="password" type="password" required></label>
+      <div id="login-error" class="error" hidden></div>
+      <button type="submit" class="btn-primary">Entrar (F5)</button>
+      <p class="muted small">Atajos: F2=editar, F4=nuevo, F5=actualizar, Esc=cancelar</p>
+    </form>
+  </div>
+</div>
+
+<!-- ============ APP PRINCIPAL ============ -->
+<div id="app" hidden>
+
+  <!-- MENU LATERAL -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-icon">📦</span>
+      <span id="brand-nombre">ERP</span>
+    </div>
+    <nav id="menu">
+      <a href="#dashboard" data-view="dashboard"><span>📊</span>Dashboard</a>
+      <a href="#productos" data-view="productos"><span>📦</span>Productos</a>
+      <a href="#familias" data-view="familias"><span>🗂️</span>Familias</a>
+      <hr>
+      <a href="#almacenes" data-view="almacenes"><span>🏢</span>Almacenes</a>
+      <a href="#ubicaciones" data-view="ubicaciones"><span>📍</span>Ubicaciones</a>
+      <a href="#traspasos" data-view="traspasos"><span>🔄</span>Traspasos stock</a>
+      <a href="#transitos" data-view="transitos"><span>🚚</span>Tránsitos</a>
+      <a href="#hojas_carga" data-view="hojas_carga"><span>📋</span>Hojas de carga</a>
+      <a href="#pendientes_expedir" data-view="pendientes_expedir"><span>📤</span>Pendientes expedir</a>
+      <a href="#inventario" data-view="inventario"><span>📋</span>Inventario físico</a>
+      <hr>
+      <a href="#proveedores" data-view="proveedores"><span>🏭</span>Proveedores</a>
+      <a href="#clientes" data-view="clientes"><span>👥</span>Clientes</a>
+      <a href="#obras" data-view="obras"><span>🏗️</span>Obras</a>
+      <hr>
+      <a href="#compras" data-view="compras"><span>📥</span>Compras / Albaranes</a>
+      <a href="#ventas" data-view="ventas"><span>📤</span>Ventas / Albaranes</a>
+      <a href="#facturacion" data-view="facturacion"><span>📄</span>Facturación</a>
+      <hr>
+      <a href="#tesoreria" data-view="tesoreria"><span>🏦</span>Tesorería</a>
+      <a href="#vencimientos" data-view="vencimientos"><span>📅</span>Vencimientos</a>
+      <hr>
+      <a href="#tpv" data-view="tpv"><span>💵</span>TPV / Caja</a>
+      <hr>
+      <a href="#importar" data-view="importar"><span>⬆️</span>Importar CSV</a>
+      <a href="#config" data-view="config"><span>⚙️</span>Configuración</a>
+    </nav>
+  </aside>
+
+  <!-- TOP BAR -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <input id="search-global" placeholder="Buscar (Ctrl+B)..." autocomplete="off">
+      <div id="search-results" class="search-results" hidden></div>
+    </div>
+    <div class="topbar-right">
+      <span id="user-info" class="muted small"></span>
+      <span id="plan-info" class="badge"></span>
+      <button id="btn-logout" class="btn-sm">Salir</button>
+    </div>
+  </header>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main id="main"></main>
+
+  <!-- BARRA DE ESTADO -->
+  <footer class="statusbar">
+    <span id="status-msg">Listo</span>
+    <span class="sep">|</span>
+    <span id="status-empresa"></span>
+    <span class="grow"></span>
+    <span id="status-fecha"></span>
+  </footer>
+</div>
+
+<!-- ============ MODAL GENERICO ============ -->
+<div id="modal" class="modal" hidden>
+  <div class="modal-box">
+    <div class="modal-title" id="modal-title">Título</div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<script src="/static/js/api.js"></script>
+<script src="/static/js/app.js"></script>
+</body>
+</html>

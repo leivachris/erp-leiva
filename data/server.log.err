@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "C:\Users\leiva\Documents\ERP LEIVA\run.py", line 64, in <module>
+    main()
+  File "C:\Users\leiva\Documents\ERP LEIVA\run.py", line 42, in main
+    from backend.config import EMPRESA_NOMBRE
+ModuleNotFoundError: No module named 'backend.config'

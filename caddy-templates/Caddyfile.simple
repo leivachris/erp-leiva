@@ -1,0 +1,19 @@
+# ============================================================
+# Caddyfile para ERP LEIVA (HTTPS automatico via Let's Encrypt)
+# ============================================================
+# Uso: cp caddy-templates/Caddyfile.simple /mnt/user/appdata/erpleiva/caddy/Caddyfile
+#      y edita "erp.tudominio.com" por tu dominio real
+
+# Dominio principal del ERP (cambiar)
+erp.tudominio.com {
+    encode gzip
+    reverse_proxy erp:8000
+}
+
+# Dominio para landing de venta
+www.tudominio.com {
+    encode gzip
+    root * /srv/landing
+    try_files {path} {path}.html /index.html
+    file_server
+}

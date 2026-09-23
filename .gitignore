@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual envs
+.venv/
+venv/
+env/
+
+# BD y datos
+data/*.db
+data/*.db-journal
+data/*.db-wal
+data/*.db-shm
+data/server.log
+data/server.err
+
+# Entorno
+.env
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# Builds / dist
+build/
+dist/
+*.egg-info/
+
+# Logs
+*.log
+logs/
+
+# Docker
+docker-compose.override.yml

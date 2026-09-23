@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Container version="2">
+
+  <Name>ERP-LEIVA</Name>
+  <Repository>erpleiva:latest</Repository>
+  <Network>bridge</Network>
+  <Privileged>False</Privileged>
+  <Support>https://github.com/leiva/erp-leiva</Support>
+  <Project>https://github.com/leiva/erp-leiva</Project>
+  <Overview>ERP multi-tenant para almacenes de construcción. Inventario, ventas, compras, facturación, multi-almacén, tránsitos.</Overview>
+  <Category>Business:Office</Category>
+  <WebUI>http://[IP]:[PORT:8000]</WebUI>
+  <TemplateURL/>
+  <Icon>https://raw.githubusercontent.com/leiva/erp-leiva/main/icon.png</Icon>
+  <ExtraParams/>
+  <PostArgs/>
+  <CPUset/>
+  <DateInstalled>0</DateInstalled>
+  <DonateText>Cafés para el desarrollador</DonateText>
+  <DonateLink>https://buymeacoffee.com/leiva</DonateLink>
+  <Description>ERP completo para almacenes y construcción. Modo SaaS o instalable. 3 planes: Básico, Pro, Empresa. Soporta múltiples almacenes, tránsitos, hojas de carga, facturación con IRPF, TPV, importación CSV.</Description>
+
+  <Networking>
+    <Mode>bridge</Mode>
+    <Publish>
+      <Port>
+        <HostPort>8000</HostPort>
+        <ContainerPort>8000</ContainerPort>
+        <Protocol>tcp</Protocol>
+        <Description>Puerto principal (UI + API REST)</Description>
+      </Port>
+    </Publish>
+  </Networking>
+
+  <Data>
+    <Volume>
+      <HostDir>/mnt/user/appdata/erpleiva</HostDir>
+      <ContainerDir>/data</ContainerDir>
+      <Mode>rw</Mode>
+      <Description>Base de datos SQLite y archivos (respaldado por appdata backup)</Description>
+    </Volume>
+  </Data>
+
+  <Environment>
+    <Variable>
+      <Name>ERP_SECRET_KEY</Name>
+      <Value>CAMBIAR-ESTA-CLAVE-POR-UNA-ALEATORIA-DE-MINIMO-32-CARACTERES-2026</Value>
+      <Description>Clave de firma de cookies. CRITICO cambiarla en produccion.</Description>
+    </Variable>
+    <Variable>
+      <Name>ERP_EMPRESA_NOMBRE</Name>
+      <Value>Centro Logistico de Almacenes</Value>
+      <Description>Nombre por defecto de la empresa</Description>
+    </Variable>
+    <Variable>
+      <Name>STRIPE_SECRET_KEY</Name>
+      <Value></Value>
+      <Description>Stripe API key para cobros. sk_test_... o sk_live_...</Description>
+    </Variable>
+    <Variable>
+      <Name>STRIPE_WEBHOOK_SECRET</Name>
+      <Value></Value>
+      <Description>Webhook signing secret de Stripe. whsec_...</Description>
+    </Variable>
+    <Variable>
+      <Name>PUBLIC_URL</Name>
+      <Value>http://localhost:8000</Value>
+      <Description>URL publica del ERP (usado por Stripe para redirecciones de pago)</Description>
+    </Variable>
+    <Variable>
+      <Name>TZ</Name>
+      <Value>Europe/Madrid</Value>
+      <Description>Zona horaria</Description>
+    </Variable>
+  </Environment>
+
+  <Plugins>
+    <Plugin>Community Applications</Plugin>
+  </Plugins>
+
+</Container>

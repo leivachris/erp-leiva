@@ -1,0 +1,94 @@
+version: "3.8"
+
+# ============================================================
+# ERP LEIVA - Stack completo para Unraid (24/7)
+# Servicios:
+#   - erp: el ERP (FastAPI)
+#   - caddy: reverse proxy con HTTPS automatico (opcional)
+#   - cloudflared: tunnel a internet (opcional, requiere dominio)
+#
+# Persistencia: /mnt/user/appdata/erpleiva (BD + .env + cloudflared)
+# Auto-restart: todos los servicios tienen restart: unless-stopped
+# ============================================================
+
+services:
+
+  # ============ ERP LEIVA ============
+  erp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: erp-leiva:latest
+    container_name: erp-leiva
+    restart: unless-stopped
+    # Solo accesible internamente (Caddy/cloudflared hacen de proxy)
+    expose:
+      - "8000"
+    environment:
+      ERP_SECRET_KEY: "${ERP_SECRET_KEY:?ERROR: ERP_SECRET_KEY no definida en .env}"
+      ERP_HOST: "0.0.0.0"
+      ERP_PORT: "8000"
+      ERP_DATA_DIR: "/data"
+      ERP_LOG_LEVEL: "INFO"
+      ERP_EMPRESA_NOMBRE: "${ERP_EMPRESA_NOMBRE:-Centro Logistico de Almacenes}"
+      STRIPE_SECRET_KEY: "${STRIPE_SECRET_KEY:-}"
+      STRIPE_WEBHOOK_SECRET: "${STRIPE_WEBHOOK_SECRET:-}"
+      PUBLIC_URL: "${PUBLIC_URL:-http://localhost:8000}"
+      TZ: "${TZ:-Europe/Madrid}"
+    volumes:
+      - /mnt/user/appdata/erpleiva:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fs", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - caddy
+    networks:
+      - erpnet
+
+  # ============ CADDY (reverse proxy + HTTPS automatico) ============
+  # Para HTTPS automatico necesitas un dominio apuntando a tu IP publica.
+  # Para solo LAN, comenta este servicio.
+  caddy:
+    image: caddy:2-alpine
+    container_name: erp-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      # Si quieres Cloudflare DNS challenge (necesario si CF proxy=true):
+      # CF_API_TOKEN: "${CF_API_TOKEN}"
+      PUBLIC_DOMAIN: "${PUBLIC_DOMAIN:-}"
+    volumes:
+      - /mnt/user/appdata/erpleiva/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - /mnt/user/appdata/erpleiva/caddy/data:/data
+      - /mnt/user/appdata/erpleiva/caddy/config:/config
+      - /mnt/user/appdata/erpleiva/landing:/srv/landing:ro
+    networks:
+      - erpnet
+
+  # ============ CLOUDFLARE TUNNEL (acceso desde internet sin abrir puertos) ============
+  # Para activar:
+  #   1. Crear tunnel en https://one.dash.cloudflare.com
+  #   2. Copiar el token
+  #   3. Anadir TUNNEL_TOKEN al .env
+  #   4. Descomentar este servicio
+  cloudflared:
+    image: cloudflare/cloudflared:latest
+    container_name: erp-cloudflared
+    restart: unless-stopped
+    command: tunnel --no-autoupdate run
+    environment:
+      TUNNEL_TOKEN: "${TUNNEL_TOKEN:-}"
+    volumes:
+      - /mnt/user/appdata/erpleiva/cloudflared:/home/nonroot/.cloudflared
+    networks:
+      - erpnet
+    # Solo se inicia si TUNNEL_TOKEN existe (perfil opcional)
+
+networks:
+  erpnet:
+    driver: bridge
