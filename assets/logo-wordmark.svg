@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 180" width="600" height="180">
+  <!--
+    ERP LEIVA - Logo horizontal (icono + texto)
+    Para landing page y documentacion.
+  -->
+  <defs>
+    <linearGradient id="topG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#3b82f6"/>
+    </linearGradient>
+    <linearGradient id="rightG" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#2563eb"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="leftG" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1e3a8a"/>
+      <stop offset="100%" stop-color="#1e40af"/>
+    </linearGradient>
+    <linearGradient id="chkG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Icono: caja isometrica escalada a 180x180, posicionada en x=10..160 -->
+  <g transform="translate(10, 0) scale(0.3125)">
+    <!-- Sombra -->
+    <ellipse cx="256" cy="430" rx="170" ry="14" fill="#000" opacity="0.12"/>
+    <!-- Cara superior -->
+    <polygon points="256,120 432,220 256,320 80,220"
+             fill="url(#topG)" stroke="#1e40af" stroke-width="6" stroke-linejoin="round"/>
+    <!-- Cara derecha -->
+    <polygon points="432,220 432,380 256,480 256,320"
+             fill="url(#rightG)" stroke="#1e40af" stroke-width="6" stroke-linejoin="round"/>
+    <!-- Cara izquierda -->
+    <polygon points="80,220 80,380 256,480 256,320"
+             fill="url(#leftG)" stroke="#1e40af" stroke-width="6" stroke-linejoin="round"/>
+    <!-- Cinta -->
+    <polygon points="256,320 432,220 432,250 256,350 80,250 80,220"
+             fill="#1e3a8a" opacity="0.95"/>
+    <!-- Indicador online -->
+    <circle cx="400" cy="110" r="58" fill="url(#chkG)" stroke="#ffffff" stroke-width="10"/>
+    <path d="M 372,113 L 392,134 L 432,90"
+          fill="none" stroke="#ffffff" stroke-width="12"
+          stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+
+  <!-- Texto -->
+  <g transform="translate(190, 0)">
+    <text x="0" y="100" font-family="Segoe UI, system-ui, sans-serif"
+          font-size="64" font-weight="800" fill="#1f2329" letter-spacing="-1">ERP</text>
+    <text x="2" y="160" font-family="Segoe UI, system-ui, sans-serif"
+          font-size="42" font-weight="300" fill="#2563eb" letter-spacing="3">LEIVA</text>
+  </g>
+</svg>
